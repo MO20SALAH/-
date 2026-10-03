@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | JobGaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+
+    <div class="auth-wrapper">
+        <a href="{{ url_for('index') }}" class="nav-link" style="margin-bottom: 15px; display: inline-block;">← العودة للرئيسية</a>
+
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="hero-badge small">🔐 الوصول إلى حسابك</div>
+                <h2>مرحباً بك مجدداً</h2>
+                <p>سجل دخولك لمتابعة التقديم على الوظائف</p>
+            </div>
+
+            <!-- كود مدمج لإظهار رسائل الخطأ أو النجاح ديناميكياً فوق الحقول -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {% if category == 'danger' %}flash-danger{% else %}flash-success{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- تحديث النموذج ليرسل البيانات إلى مسار الباك إند عبر ميثود POST -->
+            <form class="auth-form" method="POST" action="{{ url_for('login') }}">
+                <div class="input-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <!-- إضافة خاصية name="email" ليتمكن الباك إند من قراءتها -->
+                    <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">كلمة المرور</label>
+                    <!-- إضافة خاصية name="password" ليتمكن الباك إند من قراءتها -->
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-actions">
+                    <label class="remember-me">
+                        <input type="checkbox"> تذكرني
+                    </label>
+                    <a href="#" class="forgot-pass">نسيت كلمة المرور؟</a>
+                </div>
+
+                <button type="submit" class="btn-pill-active w-full" style="width: 100%; cursor: pointer;">تسجيل الدخول</button>
+            </form>
+
+            <div class="auth-footer">
+                <!-- تصحيح رابط الانتقال لصفحة إنشاء حساب ديناميكياً -->
+                <p>ليس لديك حساب؟ <a href="{{ url_for('register') }}">أنشئ حساباً جديداً</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

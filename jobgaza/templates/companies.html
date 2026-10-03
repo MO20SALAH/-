@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الشركات الشريكة | JobGaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div class="logo">Job<span>Gaza</span></div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">الرئيسية</a>
+                <a href="{{ url_for('jobs') }}" class="nav-link">تصفح الوظائف</a>
+                <a href="{{ url_for('companies') }}" class="nav-link active">الشركات</a>
+            </nav>
+            <div class="nav-actions">
+                {% if session.get('user_id') %}
+                    <span style="color: var(--color-text-primary); margin-left: 10px;">👤 {{ session['user_name'] }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn-ghost" style="color: #ff4d4d; text-decoration: none; font-weight: bold; padding: 5px 10px; border: 1px solid rgba(255,77,77,0.3); border-radius: 6px;">خروج</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn-ghost">تسجيل دخول</a>
+                    <a href="{{ url_for('register') }}" class="btn-pill">أنشئ حساب</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <div class="container">
+            <h1 class="page-title">دليل المنظمات والشركات الشريكة</h1>
+            <p class="page-subtitle">استعرض كبرى المؤسسات والشركات النشطة في التوظيف داخل قطاع غزة وظائفها الحالية</p>
+            
+            <div class="companies-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; margin-top: 30px;">
+                {% if companies %}
+                    {% for company in companies %}
+                        <div class="company-card card" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">🏢</div>
+                            <h3 style="color: var(--color-text-primary); margin-bottom: 5px; font-size: 1.25rem;">{{ company['name'] }}</h3>
+                            <p style="color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: 20px;">مؤسسة تشغيلية شريكة بالمنصة</p>
+                            
+                            <!-- هنا الربط البرمجي الذكي الموجه للوظائف الخاصة بالشركة فقط -->
+                            <a href="{{ url_for('jobs', company_id=company['id']) }}" class="company-link" style="color: var(--color-active); font-weight: 500; text-decoration: none; font-size: 0.9rem; padding: 8px 16px; border: 1px solid var(--color-border); border-radius: 6px; width: 100%; display: block; background: rgba(255,255,255,0.02);">عرض الوظائف المتاحة للمنشأة ←</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #888;">
+                        <p>لا توجد شركات مسجلة حالياً في النظام.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

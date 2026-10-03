@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتصل بنا | JobGaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">Job<span>Gaza</span></div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">الرئيسية</a>
+                <a href="{{ url_for('jobs') }}" class="nav-link">تصفح الوظائف</a>
+                <a href="{{ url_for('companies') }}" class="nav-link">الشركات</a>
+                <a href="{{ url_for('create_job') }}" class="nav-link">أعلن عن وظيفة</a>
+                <a href="{{ url_for('contact') }}" class="nav-link">اتصل بنا</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="{{ url_for('login') }}" class="btn-ghost" style="text-decoration: none; display: inline-block;">تسجيل دخول</a>
+                <a href="{{ url_for('register') }}" class="btn-pill" style="text-decoration: none; display: inline-block;">أنشئ حساب</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <div class="container" style="max-width: 500px;">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="hero-badge small">💬 تواصل معنا</div>
+                    <h2>تواصل معنا</h2>
+                    <p>لديك استفسار أو واجهتك مشكلة؟ أرسل لنا رسالة وسنرد عليك بأسرع وقت</p>
+                </div>
+
+                <!-- كود مدمج لإظهار رسائل النجاح بعد إرسال النموذج -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-success">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- تحديث النموذج ليرسل البيانات للباك إند عبر POST -->
+                <form class="auth-form" method="POST" action="{{ url_for('contact') }}">
+                    <div class="input-group">
+                        <label for="name">الاسم</label>
+                        <input type="text" id="name" name="name" placeholder="أدخل اسمك" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">البريد الإلكتروني</label>
+                        <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="subject">موضوع الرسالة</label>
+                        <input type="text" id="subject" name="subject" placeholder="كيف يمكننا مساعدتك؟" required>
+                    </div>
+                    <button type="submit" class="btn-pill-active w-full" style="width: 100%; cursor: pointer;">إرسال الرسالة</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

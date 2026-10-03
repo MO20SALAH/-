@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Dream Job in Gaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">Job<span>Gaza</span></div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">الرئيسية</a>
+                <a href="{{ url_for('jobs') }}" class="nav-link">تصفح الوظائف</a>
+                <a href="{{ url_for('companies') }}" class="nav-link">الشركات</a>
+                <a href="{{ url_for('create_job') }}" class="nav-link">أعلن عن وظيفة</a>
+                <a href="{{ url_for('contact') }}" class="nav-link">اتصل بنا</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="{{ url_for('login') }}" class="btn-ghost" style="text-decoration: none; display: inline-block;">تسجيل دخول</a>
+                <a href="{{ url_for('register') }}" class="btn-pill" style="text-decoration: none; display: inline-block;">أنشئ حساب</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="hero-section">
+        <div class="hero-container">
+            <div class="hero-badge">🚀 بوابة وظائف احترافية في غزة</div>
+            <h1 class="hero-headline">ابحث عن فرصتك<br><span class="accent-text">وأطلق مسارك المهني</span></h1>
+            <p class="hero-subtitle">تواصل مع الشركات والمؤسسات الشريكة، استكشف الوظائف الشاغرة، وابدأ رحلتك المهنية بثقة من منصة JobGaza</p>
+
+            <div class="hero-buttons">
+                <a href="{{ url_for('jobs') }}" class="btn-pill-active" style="text-decoration: none; display: inline-block; text-align: center;">اكتشف الوظائف الآن</a>
+                <a href="{{ url_for('create_job') }}" class="btn-pill-secondary" style="text-decoration: none; display: inline-block;">أعلن عن وظيفة</a>
+            </div>       
+            <div class="features-grid">
+                <div class="card">
+                    <span class="card-icon">💼</span>
+                    <h3>وظائف حقيقية</h3>
+                    <p>فرص جديدة مباشرة من مؤسسات وشركات معتمدة</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">⚡</span>
+                    <h3>تقديم سريع</h3>
+                    <p>عملية تقديم بسيطة وسريعة تعزز فرصك في الوصول</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">📈</span>
+                    <h3>تطوير مهني</h3>
+                    <p>انطلق نحو مسار مهني ملهم مع فرص نمو متنوعة</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

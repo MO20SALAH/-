@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة التقديم الفوري | JobGaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
+    <main class="page-main">
+        <div class="container" style="max-width: 550px;">
+            <div class="auth-card">
+                <div class="auth-header" style="text-align: center; margin-bottom: 25px;">
+                    <h2>استمارة التقديم الإلكتروني</h2>
+                    <p style="color: var(--color-primary-dark); font-weight: bold; margin-top: 5px; font-size: 1.2rem;">وظيفة: {{ job['title'] }}</p>
+                    <p style="font-size: 0.85rem; color: var(--color-text-secondary);">المنشأة المعلنة: {{ job['company_name'] }}</p>
+                </div>
+
+                <form class="auth-form" method="POST" action="{{ url_for('apply', job_id=job['id']) }}">
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label for="name">الاسم الكامل للمتقدم</label>
+                        <input type="text" id="name" name="name" value="{{ session['user_name'] }}" required readonly style="background-color: var(--color-bg); cursor: not-allowed;">
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label for="email">البريد الإلكتروني للاتصال</label>
+                        <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label for="cv_link">رابط سيرة الذاتية المهنية الحالية</label>
+                        <input type="url" id="cv_link" name="cv_link" value="{{ profile['cv_link'] or '' }}" placeholder="https://drive.google.com/...">
+                        <small style="color: var(--color-text-secondary); font-size: 0.75rem; display: block; margin-top: 4px;">* تم جلب الرابط من بروفايلك تلقائياً ويمكنك تعديله لهذا الطلب.</small>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label for="cover_letter">رسالة التغطية / دوافع التقديم</label>
+                        <textarea id="cover_letter" name="cover_letter" placeholder="اكتب رسالة موجزة لصاحب العمل تشرح فيها كفاءتك التقنية لهذه الوظيفة الشاغرة..." rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-pill-active w-full">إرسال طلب التوظيف</button>
+                    <a href="{{ url_for('jobs') }}" style="display: block; text-align: center; color: var(--color-text-secondary); margin-top: 15px; text-decoration: none; font-size: 0.9rem;">إلغاء وتراجع</a>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

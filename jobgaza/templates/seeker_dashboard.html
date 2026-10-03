@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | باحث عن عمل</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">Job<span>Gaza</span></div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">الرئيسية</a>
+                <a href="{{ url_for('jobs') }}" class="nav-link">تصفح الوظائف</a>
+                <a href="{{ url_for('companies') }}" class="nav-link">الشركات</a>
+                <a href="{{ url_for('seeker_dashboard') }}" class="nav-link active">لوحتي الذكية</a>
+            </nav>
+            <div class="nav-actions">
+                <span style="color: var(--color-text-primary); margin-left: 10px;">أهلاً، {{ session['user_name'] }}</span>
+                <a href="{{ url_for('logout') }}" class="btn-ghost">تسجيل خروج</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <div class="container seeker-grid" style="max-width: 1000px; display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+            
+            <!-- قســم إدارة الملف الشخصي والسيرة الذاتية -->
+            <div class="auth-card" style="height: fit-content;">
+                <h3 style="margin-bottom: 15px; color: var(--color-active);">ملفي المهني</h3>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #d1e7dd; color: #0f5132; font-size: 0.85rem; text-align: center;">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('seeker_dashboard') }}">
+                    <div class="input-group">
+                        <label for="phone">رقم الجوال</label>
+                        <input type="text" id="phone" name="phone" value="{{ profile['phone'] or '' }}" placeholder="059xxxxxxx">
+                    </div>
+                    <div class="input-group">
+                        <label for="skills">المهارات (افصل بينها بفاصلة)</label>
+                        <input type="text" id="skills" name="skills" value="{{ profile['skills'] or '' }}" placeholder="Python, UI/UX, Excel">
+                    </div>
+                    <div class="input-group">
+                        <label for="cv_link">رابط السيرة الذاتية (Drive/Dropbox)</label>
+                        <input type="url" id="cv_link" name="cv_link" value="{{ profile['cv_link'] or '' }}" placeholder="https://drive.google.com/..." required>
+                    </div>
+                    <div class="input-group">
+                        <label for="bio">نبذة تعريفية عنك</label>
+                        <textarea id="bio" name="bio" rows="3" style="background-color: #ffffff; border: 1px solid var(--color-border); color: var(--color-text-primary); padding: 10px; border-radius: 8px; width: 100%; font-family: inherit;">{{ profile['bio'] or '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn-pill-active w-full" style="width: 100%; cursor: pointer;">تحديث ملفي السري</button>
+                </form>
+            </div>
+
+            <!-- قســم متابعة طلبات التوظيف وحالتها -->
+            <div class="auth-card">
+                <h3 style="margin-bottom: 20px;">طلبات التوظيف التي قدمت عليها</h3>
+                
+                {% if applications %}
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: right; color: var(--color-text-primary);">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--color-border); color: var(--color-text-secondary);">
+                                    <th style="padding: 12px;">الوظيفة</th>
+                                    <th style="padding: 12px;">الشركة</th>
+                                    <th style="padding: 12px;">تاريخ التقديم</th>
+                                    <th style="padding: 12px;">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 12px; font-weight: 500;">{{ app['title'] }}</td>
+                                    <td style="padding: 12px; color: var(--color-text-secondary);">{{ app['company_name'] }}</td>
+                                    <td style="padding: 12px; font-size: 0.85rem; color: #888;">{{ app['applied_at'].split(' ')[0] }}</td>
+                                    <td style="padding: 12px;">
+                                        <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
+                                            {% if app['status'] == 'مقبول' %} background-color: #0f5132; color: #d1e7dd;
+                                            {% elif app['status'] == 'مرفوض' %} background-color: #842029; color: #f8d7da;
+                                            {% else %} background-color: #664d03; color: #fff3cd; {% endif %}">
+                                            {{ app['status'] }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p style="color: #888; text-align: center; padding: 40px;">لم تقم بالتقديم على أي وظيفة حتى الآن. اضغط على تصفح الوظائف وابدأ رحلتك!</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

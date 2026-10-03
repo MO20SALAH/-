@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نشر فرصة عمل جديدة | JobGaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div class="logo">Job<span>Gaza</span></div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">الرئيسية</a>
+                <a href="{{ url_for('employer_dashboard') }}" class="nav-link">إدارة المنشورات</a>
+                <a href="{{ url_for('create_job') }}" class="nav-link active">نشر وظيفة جديدة</a>
+            </nav>
+            <div class="nav-actions">
+                <span style="color: var(--color-primary-dark); margin-left: 10px;">🏢 {{ session['user_name'] }}</span>
+                <a href="{{ url_for('logout') }}" class="btn-ghost" style="color: #ff4d4d; text-decoration: none; font-weight: bold; padding: 5px 10px; border: 1px solid rgba(255,77,77,0.3); border-radius: 6px;">خروج</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <div class="container" style="max-width: 600px;">
+            <div class="auth-card">
+                <div class="auth-header" style="text-align: center; margin-bottom: 25px;">
+                    <h2>نشر إعلان وظيفي جديد</h2>
+                    <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-top: 5px;">أدخل تفاصيل الوظيفة بدقة لتصل إلى آلاف الكفاءات في قطاع غزة</p>
+                </div>
+
+                <form class="auth-form" method="POST" action="{{ url_for('create_job') }}">
+
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label for="title">المسمى الوظيفي</label>
+                        <input type="text" id="title" name="title" placeholder="مثال: مطور ويب، مهندس برمجيات" required>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label for="job_type">نوع العمل</label>
+                        <select id="job_type" name="job_type">
+                            <option value="full_time">دوام كامل</option>
+                            <option value="part_time">دوام جزئي</option>
+                            <option value="remote">عن بعد</option>
+                            <option value="freelance">عمل حر / عقد</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label for="description">وصف الوظيفة المهامي</label>
+                        <textarea id="description" name="description" placeholder="اكتب المهام الأساسية المطلوبة من الموظف..." rows="4" required></textarea>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label for="requirements">الشروط والمتطلبات والخبرات</label>
+                        <textarea id="requirements" name="requirements" placeholder="اكتب المهارات التقنية والشهادات وسنوات الخبرة المطلوبة..." rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-pill-active w-full">نشر الإعلان الآن</button>
+                    <a href="{{ url_for('employer_dashboard') }}" style="display: block; text-align: center; color: var(--color-text-secondary); margin-top: 15px; text-decoration: none; font-size: 0.9rem;">إلغاء والعودة للوحة التحكم</a>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

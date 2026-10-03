@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | إدارة المنشأة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">Job<span>Gaza</span></div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">الرئيسية</a>
+                <a href="{{ url_for('employer_dashboard') }}" class="nav-link active">إدارة المنشورات</a>
+                <a href="{{ url_for('create_job') }}" class="nav-link">نشر وظيفة جديدة</a>
+            </nav>
+            <div class="nav-actions">
+                <span style="color: var(--color-active); margin-left: 10px;">🏢 {{ session['user_name'] }}</span>
+                <a href="{{ url_for('logout') }}" class="btn-ghost">تسجيل خروج</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <div class="container" style="max-width: 1100px;">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div style="padding: 12px; margin-bottom: 20px; border-radius: 8px; background-color: #fff3cd; color: #664d03; font-size: 0.9rem; text-align: center;">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- القسم الأول: الوظائف الحالية المنشورة من الشركة -->
+            <div class="auth-card" style="margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3>الإعلانات الوظيفية الحالية لشركتكم</h3>
+                    <a href="{{ url_for('create_job') }}" class="btn-pill" style="text-decoration: none; font-size: 0.85rem; padding: 8px 16px;">+ إعلان جديد</a>
+                </div>
+                
+                {% if jobs %}
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                        {% for job in jobs %}
+                            <div style="border: 1px solid var(--color-border); padding: 15px; border-radius: 8px; background: #ffffff; display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h4 style="color: var(--color-text-primary); margin-bottom: 5px;">{{ job['title'] }}</h4>
+                                    <span style="font-size: 0.75rem; background: var(--color-border); padding: 2px 8px; border-radius: 4px; color: var(--color-text-secondary);">{{ job['job_type'] }}</span>
+                                </div>
+                                <form method="POST" action="{{ url_for('delete_job', job_id=job['id']) }}" onsubmit="return confirm('هل أنت متأكد من حذف هذه الوظيفة وجميع طلباتها نهائياً؟')" style="display: inline;">
+                                    <button type="submit" style="background: none; border: none; cursor: pointer; color: #ff4d4d; font-size: 0.85rem; font-weight: bold; padding: 0; font-family: inherit;">حذف 🗑️</button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: #888; text-align: center; padding: 20px;">لم تقوموا بنشر أي وظائف بعد.</p>
+                {% endif %}
+            </div>
+
+            <!-- القسم الثاني: مراجعة المتقدمين وإدارتهم والتحكم بحالتهم -->
+            <div class="auth-card">
+                <h3>طلبات التوظيف الواردة لشركتكم ومراجعة السير الذاتية</h3>
+                <br>
+                {% if applicants %}
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: right; color: var(--color-text-primary);">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--color-border); color: var(--color-text-secondary);">
+                                    <th style="padding: 12px;">المتقدم</th>
+                                    <th style="padding: 12px;">الوظيفة المستهدفة</th>
+                                    <th style="padding: 12px;">السيرة الذاتية</th>
+                                    <th style="padding: 12px;">ملاحظات المتقدم</th>
+                                    <th style="padding: 12px;">حالة الطلب الحالية</th>
+                                    <th style="padding: 12px; text-align: center;">إجراءات القرار</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for applicant in applicants %}
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 12px;">
+                                        <div style="font-weight: bold; color: var(--color-text-primary);">{{ applicant['applicant_name'] }}</div>
+                                        <div style="font-size: 0.8rem; color: #888;">{{ applicant['applicant_email'] }}</div>
+                                    </td>
+                                    <td style="padding: 12px; color: var(--color-active);">{{ applicant['job_title'] }}</td>
+                                    <td style="padding: 12px;"><a href="{{ applicant['cv_link'] }}" target="_blank" style="color: var(--color-primary-dark); text-decoration: underline; font-size: 0.9rem;">فتح الملف 📄</a></td>
+                                    <td style="padding: 12px; font-size: 0.85rem; color: var(--color-text-secondary); max-width: 200px;">{{ applicant['cover_letter'] or 'لا يوجد رسالة إضافية' }}</td>
+                                    <td style="padding: 12px;">
+                                        <span style="font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; font-weight: bold;
+                                            {% if applicant['status'] == 'مقبول' %} color: #22c55e;
+                                            {% elif applicant['status'] == 'مرفوض' %} color: #ef4444;
+                                            {% else %} color: #eab308; {% endif %}">
+                                            ● {{ applicant['status'] }}
+                                        </span>
+                                    </td>
+                                    <td style="padding: 12px; text-align: center;">
+                                        <form method="POST" action="{{ url_for('update_status', app_id=applicant['app_id'], status='مقبول') }}" style="display: inline;">
+                                            <button type="submit" class="btn-pill" style="background-color: #16a34a; border: none; color: white; padding: 5px 10px; font-size: 0.8rem; margin-left: 5px; border-radius: 4px; cursor: pointer; font-family: inherit;">قبول</button>
+                                        </form>
+                                        <form method="POST" action="{{ url_for('update_status', app_id=applicant['app_id'], status='مرفوض') }}" style="display: inline;">
+                                            <button type="submit" class="btn-pill" style="background-color: #dc2626; border: none; color: white; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; font-family: inherit;">رفض</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p style="color: #888; text-align: center; padding: 40px;">لا توجد طلبات توظيف واردة حتى هذه اللحظة.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد | JobGaza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+
+    <div class="auth-wrapper">
+        <a href="{{ url_for('index') }}" class="nav-link" style="margin-bottom: 15px; display: inline-block;">← العودة للرئيسية</a>
+
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="hero-badge small">✨ أنشئ حسابك الآن</div>
+                <h2>إنشاء حساب جديد</h2>
+                <p>ابدأ رحلتك المهنية وابحث عن وظيفة أحلامك في غزة</p>
+            </div>
+
+            <!-- كود مدمج لإظهار رسائل الخطأ أو النجاح ديناميكياً -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {% if category == 'danger' %}flash-danger{% else %}flash-success{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- تحديث النموذج ليُرسل البيانات للباك إند -->
+            <form class="auth-form" method="POST" action="{{ url_for('register') }}">
+                
+                <div class="input-group">
+                    <label for="fullname">الاسم الكامل</label>
+                    <input type="text" id="fullname" name="name" placeholder="أدخل اسمك الثلاثي" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <!-- حقل جديد ومهم لتحديد نوع الحساب (مطلوب للباك إند) -->
+                <div class="input-group">
+                    <label for="role">نوع الحساب</label>
+                    <select id="role" name="role" style="width: 100%; background-color: #ffffff; color: var(--color-text-primary); border: 1px solid var(--color-border); padding: 12px; border-radius: 8px; font-family: inherit;">
+                        <option value="seeker">باحث عن عمل (صلاحية تصفح وتقديم السير)</option>
+                        <option value="employer">شركة / منشأة وظائف (صلاحية نشر وإدارة طلبات المتقدمين)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="remember-me">
+                        <input type="checkbox" required> أوافق على شروط الاستخدام وسياسة الخصوصية
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-pill-active w-full" style="width: 100%; cursor: pointer;">تسجيل حساب جديد</button>
+            </form>
+
+            <div class="auth-footer">
+                <!-- تصحيح الرابط ليتوجه بشكل صحيح لصفحة تسجيل الدخول -->
+                <p>لديك حساب بالفعل؟ <a href="{{ url_for('login') }}">تسجيل الدخول</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
